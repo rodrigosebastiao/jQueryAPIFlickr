@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta viewport="device" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie-edge">
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <title>API Flickr jQuery</title>
+        <style>
+
+
+        </style>
+    </head>
+    <body>
+        <h2>Flickr API Version 2 - My Gallery</h2>
+        <div class="flickr-frame-v2"></div>
+        <br>
+        <hr>
+        <h2>Flickr API Version 1 - Public Photos</h2>
+        <div class="flickr-frame"></div>
+        
+        <div class="message"></div>
+    </body>
+    <script>
+        //$(document).ready(function(){
+
+        var api_key = "f7045e37ab11f316b234f7abb3dcfab7";
+        var user_id = "98083080@N00";
+        var gallery_id = "72157670892012508";
+        var flickrMyPhotos = "http://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key="+ api_key +"&user_id="+user_id+"&jsoncallback=?";
+        var flickrMyGallery = "https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key="+ api_key +"&gallery_id="+ gallery_id +"&jsoncallback=?";
+
+        var flickrMyPhotoStream = "https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=" + api_key + "&gallery_id=" + gallery_id + "";
+
+
+        var flickrPublic = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
+
+/*Version 2 - my images*/
+    $.getJSON(flickrMyGallery, {
+        format: "json",
+    })
+        .done(function (data) {
+            $.each(data.photos.photo, function (index, item) {
+                var images = "<img src='https://farm" + item.farm + ".staticflickr.com/" + item.server + "/"+ item.id +"_" + item.secret + ".jpg 'alt='" + item.title + "'>";
+              
+                var title = "<p class='alt-title'>" + item.title + "</p>";
+
+                var $photoFrame = $("<div class='flickr-photos'></div>")
+                    .css("display", "inline-block")
+                    .css("width", "300")
+                    .css("overflow", "hidden")
+                    .css("margin-right", "10px")
+
+                $(images)
+                    .css("width", "300")
+                    .appendTo($photoFrame);
+
+                $(title)
+                    .css("color", "#777")
+                    .css("text-align", "center")
+                    .appendTo($photoFrame);
+
+                $photoFrame
+                    .appendTo(".flickr-frame-v2");
+
+                if (index == 5) {
+                    return false;
+                }
+            })
+
+        })
+        .fail(function () {
+            $("<p>").text("Could not load pictures!").after(".flickr-frame-v2");
+        })
+        .always(function () {
+            $("<p>").text("Finished Loading!").after(".flickr-frame-v2");
+        });
+
+
+
+/*Version 1 - Public Images*/
+        $.getJSON(flickrPublic, {
+            format:"json",
+        })
+        .done(function (data) {
+
+            var photos = [];
+            
+            $.each(data.items, function(index, item){
+
+                var images = "<img src='"+ item.media.m +"' alt='"+ item.title +"'>";
+                
+                var title = "<p class='alt-title'>" + item.title + "</p>";
+
+                var $photoFrame = $("<div class='flickr-photos'></div>")
+                .css("display", "inline-block")
+                .css("width", "300")
+                .css("overflow", "hidden")
+                .css("margin-right", "10px")
+                
+                $(images)
+                .css("width", "300")
+                .appendTo($photoFrame);
+
+                $(title)
+                .css("color", "#777")
+                .css("text-align", "center")
+                .appendTo($photoFrame);
+
+                $photoFrame
+                .appendTo(".flickr-frame");
+
+                if(index == 5){
+                    return false;
+                }
+            })
+                       
+        })
+        .fail(function () {
+            $("<p>").text("Could not load pictures!").after(".flickr-frame-v2");
+        })
+        .always(function () {
+            $("<p>").text("Finished Loading!").after(".flickr-frame-v2");
+        });
+ 
+   
+    </script>
+</html>
+
