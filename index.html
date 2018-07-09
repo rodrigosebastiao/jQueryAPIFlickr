@@ -30,13 +30,13 @@
         var flickrMyPhotos = "http://api.flickr.com/services/rest/?&method=flickr.people.getPublicPhotos&api_key="+ api_key +"&user_id="+user_id+"&jsoncallback=?";
         var flickrMyGallery = "https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key="+ api_key +"&gallery_id="+ gallery_id +"&jsoncallback=?";
 
-        var flickrMyPhotoStream = "https://api.flickr.com/services/rest/?method=flickr.galleries.getPhotos&api_key=" + api_key + "&gallery_id=" + gallery_id + "";
+        var flickrMyPhotoStream = "https://api.flickr.com/services/rest/?method=flickr.people.getPublicPhotos&api_key=" + api_key + "&user_id=" + user_id + "&jsoncallback=?";
 
 
         var flickrPublic = "http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?";
 
 /*Version 2 - my images*/
-    $.getJSON(flickrMyGallery, {
+    $.getJSON(flickrMyPhotoStream, {
         format: "json",
     })
         .done(function (data) {
@@ -80,42 +80,38 @@
 
 /*Version 1 - Public Images*/
 /*
-        $.getJSON(flickrPublic, {
-            format:"json",
-        })
+        $.getJSON(flickrMyGallery, {
+        format: "json",
+    })
         .done(function (data) {
-
-            var photos = [];
-            
-            $.each(data.items, function(index, item){
-
-                var images = "<img src='"+ item.media.m +"' alt='"+ item.title +"'>";
-                
+            $.each(data.photos.photo, function (index, item) {
+                var images = "<img src='https://farm" + item.farm + ".staticflickr.com/" + item.server + "/"+ item.id +"_" + item.secret + ".jpg 'alt='" + item.title + "'>";
+              
                 var title = "<p class='alt-title'>" + item.title + "</p>";
 
                 var $photoFrame = $("<div class='flickr-photos'></div>")
-                .css("display", "inline-block")
-                .css("width", "300")
-                .css("overflow", "hidden")
-                .css("margin-right", "10px")
-                
+                    .css("display", "inline-block")
+                    .css("width", "300")
+                    .css("overflow", "hidden")
+                    .css("margin-right", "10px")
+
                 $(images)
-                .css("width", "300")
-                .appendTo($photoFrame);
+                    .css("width", "300")
+                    .appendTo($photoFrame);
 
                 $(title)
-                .css("color", "#777")
-                .css("text-align", "center")
-                .appendTo($photoFrame);
+                    .css("color", "#777")
+                    .css("text-align", "center")
+                    .appendTo($photoFrame);
 
                 $photoFrame
-                .appendTo(".flickr-frame");
+                    .appendTo(".flickr-frame-v2");
 
-                if(index == 5){
+                if (index == 5) {
                     return false;
                 }
             })
-                       
+
         })
         .fail(function () {
             $("<p>").text("Could not load pictures!").after(".flickr-frame-v2");
@@ -123,7 +119,7 @@
         .always(function () {
             $("<p>").text("Finished Loading!").after(".flickr-frame-v2");
         });
-*/ 
+*/
    
     </script>
 </html>
